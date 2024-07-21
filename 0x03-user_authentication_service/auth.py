@@ -26,9 +26,11 @@ def _hash_password(password: str) -> bytes:
 
     return _hashed_pwd
 
-def _generate_uuid(self) -> str:
-        """ retuns function string representation of uuid"""
-        return str(uuid.uuid4())
+
+def _generate_uuid() -> str:
+    """ retuns function string representation of uuid"""
+    return str(uuid.uuid4())
+
 
 class Auth:
     """Auth class to interact with the authentication database.
