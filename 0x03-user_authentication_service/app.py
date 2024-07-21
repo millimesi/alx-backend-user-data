@@ -102,5 +102,58 @@ def profile():
         abort(403)
 
 
+@app.route("/reset_password", methods=["POST"])
+def get_reset_password_token():
+    """ Generate reset_token and responds it"""
+    # Get the email from the request
+    email = request.form.get("email")
+
+    # if the email is not given abort with 403
+    if not email:
+        abort(403)
+
+    # try to get password reset token
+    try:
+        reset_token = AUTH.get_reset_password_token(email=email)
+
+        # retun the rest_token
+        return jsonify(
+            {"email": f"{email}", "reset_token": f"{reset_token}"}), 200
+
+    # if exception is raised by not email abort with 403
+    except Exception:
+        abort(403)
+
+
+@app.route("/reset_password", methods=["PUT"])
+def update_password():
+    """ Reset the password with form data of
+    email, rest_token, and new password"""
+    # Get email, reset_token, and password
+    email = request.form.get("email")
+    reset_token = request.form.get("reset_token")
+    new_password = request.form.get("new_password")
+
+    # if one of the above datas doesnt exists abort with 403
+    if (email is None or reset_token is None or
+            new_password is None):
+        abort(403)
+
+    # try to update the password with update password method
+    try:
+        AUTH.update_password(
+            reset_token=reset_token, password=new_password)
+
+        # return update statuse info
+        return jsonify(
+            {"email": f"{email}", "message": "Password updated"}), 200
+
+    # if update_password raises Value Error
+    # Because NotFound Exception abort with 403
+    except Exception:
+        print("update raises error")
+        abort(403)
+
+
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port="5000", use_reloader=False)
+    app.run(host="0.0.0.0", port="5000")

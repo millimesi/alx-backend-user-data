@@ -152,3 +152,51 @@ class Auth:
         """
         self._db.update_user(user_id=user_id, session_id=None)
         return None
+
+    def get_reset_password_token(self, email: str) -> str:
+        """ create and return password reset token
+        Args:
+            email(str): email of the user
+        Returns:
+            str: string uuid rest token
+        """
+        # try to find the user with the email
+        try:
+            user = self._db.find_user_by(email=email)
+
+            # generate rest_token from the uuid
+            reset_token = _generate_uuid()
+
+            # update the user rest_token column with
+            # the generated token and return the token
+            self._db.update_user(user_id=user.id, reset_token=reset_token)
+            return reset_token
+
+        # if the use is not found raise vale error
+        except Exception:
+            raise ValueError
+
+    def update_password(self, reset_token: str, password: str) -> None:
+        """ update the password of the user by taking the reset_token
+        Args:
+            reset_token(str): reset_token given before
+            password(str): the new password
+        Return:
+            None
+        """
+        # try to find the user using the reset_token
+        try:
+            user = self._db.find_user_by(reset_token=reset_token)
+
+            # hash the password
+            new_hashed_password = _hash_password(password=password)
+
+            # update the reset token with new hashed password
+            self._db.update_user(
+                user_id=user.id, hashed_password=new_hashed_password)
+
+            return None
+
+        # if the user is not found with rest_token raise value error
+        except Exception:
+            raise ValueError
