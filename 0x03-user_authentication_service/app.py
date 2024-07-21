@@ -64,6 +64,10 @@ def logout():
     # Get cookie with session Id key from request
     session_id = request.cookies.get("session_id")
 
+    # if session id is not given in the cookies abort with 403
+    if not session_id:
+        abort(403)
+
     # find user by session Id
     user = AUTH.get_user_from_session_id(session_id=session_id)
 
