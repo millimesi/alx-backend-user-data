@@ -151,7 +151,6 @@ def update_password():
     # if update_password raises Value Error
     # Because NotFound Exception abort with 403
     except Exception:
-        print("update raises error")
         abort(403)
 
 
