@@ -193,7 +193,9 @@ class Auth:
 
             # update the reset token with new hashed password
             self._db.update_user(
-                user_id=user.id, hashed_password=new_hashed_password)
+                user_id=user.id,
+                hashed_password=new_hashed_password,
+                reset_token=None)
 
             return None
 
