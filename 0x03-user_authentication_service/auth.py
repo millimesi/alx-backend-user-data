@@ -26,6 +26,9 @@ def _hash_password(password: str) -> bytes:
 
     return _hashed_pwd
 
+def _generate_uuid(self) -> str:
+        """ retuns function string representation of uuid"""
+        return str(uuid.uuid4())
 
 class Auth:
     """Auth class to interact with the authentication database.
@@ -89,10 +92,6 @@ class Auth:
         except Exception:
             return False
 
-    def _generate_uuid(self) -> str:
-        """ retuns function string representation of uuid"""
-        return str(uuid.uuid4())
-
     def create_session(self, email: str) -> str:
         """
         Create a session id Correspondans to the user
@@ -108,7 +107,7 @@ class Auth:
 
             # if user exists create the session id
             if user:
-                session_id = self._generate_uuid()
+                session_id = _generate_uuid()
 
                 # update the user in database with session_id
                 try:
