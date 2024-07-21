@@ -87,6 +87,10 @@ def profile():
     # Get the session id from the cookie
     session_id = request.cookies.get("session_id")
 
+    # if not session Id abort with 403
+    if not session_id:
+        abort(403)
+
     # try to get the user by the session id
     try:
         user = AUTH.get_user_from_session_id(session_id=session_id)
